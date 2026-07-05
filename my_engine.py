@@ -5,37 +5,6 @@ import matplotlib.pyplot as plt
 %matplotlib inline
 
 
-def f(my_x):
-    return 3*my_x**2 -4*my_x+5
-f(3)
-
-#plot out points (from, to, steps)
-xs = np.arange(-5, 5, .75)
-ys = f(xs)
-
-#make a plot of points
-plt.plot(xs, ys)
-
-# %%
-h= 0.0000000001
-x=2/3
-(f(x+h)-f(x))/h
-
-# %%
-#derivative
-h=0.0001
-
-a= 2
-b=-3
-c=10
-d1= a*b+c
-c+=h
-d2=a*b+c
-print('d1',d1)
-print('d2',d2)
-print('slope',(d2-d1)/h)
-
-# %%
 
 #double underscores (__example__) usually represent instrunctions 
 # that python does not currently understand 
@@ -127,25 +96,8 @@ class Value:
         self.grad=1.0 
         for node in reversed(topo):            
             node._backward()
-    
-a = Value(2.0, label='a')
-a+2
 
-'''
-b = Value(-3.0, label='b')
-c= Value(10.0, label ='c')
 
-e=a*b; e.label='e'
-d=e+c; d.label ='d'
-f= Value(-2.0, label ='f')
-L=d*f; L.label='L'
-
-L
-'''
-#print(f"current: {d}, children: {d._prev} op{d._op}")
-#(a.__mul__(b)).__add__(c)
-
-   
 
 # %%
 
@@ -186,172 +138,6 @@ def draw_dot(root):
 #draw_dot(L)
 
 # %%
-'''
-L = d *f
-dl/dd =? f
-(f(x+h)-f(x))/h
-
-((d+h)*f -d*f)/h
-(d*f + h*f -d*f)/h
-(h*f)/h
-f
-'''
-# %%
-L.grad=1.0
-f.grad=4.0
-d.grad =-2.0
-draw_dot(L)
-# %%
-def wtf():
-    h=.001
-
-    a = Value(2.0 , label='a')
-    b = Value(-3.0, label='b')
-    c= Value(10.0, label ='c')
-
-    e=a*b; e.label='e'
-    d=e+c; d.label ='d'
-    f= Value(-2.0, label ='f')
-    L=d*f; L.label='L'
-    L1=L.data
-
-    a = Value(2.0, label='a')
-    b = Value(-3.0, label='b')
-    c= Value(10.0, label ='c')
-   
-
-    e=a*b; e.label='e'
-    e.data += h
-    d=e+c; d.label ='d'
-    f= Value(-2.0, label ='f')
-    L=d*f; L.label='L'
-    L2=L.data
-    print((L2-L1)/h)
-
-wtf()
-
-
-# %%
-plt.plot(np.arange(-5, 5, .2), np.tanh(np.arange(-5, 5, .2)))
-# %%
-
-#inputs x1,x2
-x1=Value(2.0, label="x1")
-x2=Value(0.0, label='x2')
-#weights
-w1=Value(-3.0,label='w1')
-w2=Value(1.0, label='w2')
-#bias of neuron?
-b=Value(6.881373587870195432, label='b')
-
-#x1w1 + x2w2 *b
-x1w1=x1*w1; x1w1.label='x1w1'
-x2w2=x2*w2; x2w2.label='x2w2'
-x1w1x2w2=x1w1+x2w2; x1w1x2w2.label='x1w1x2w2'
-n= x1w1x2w2 +b ; n.label='n'
-o=n.tanh(); o.label='o'
-
-
-
-'''
-x1.grad=w1.data*x1w1.grad
-w1.grad=x1.data*x1w1.grad
-
-x2.grad=w2.data*x2w2.grad
-w2.grad = x2.data*x2w2.grad
-x1w1.grad=.0706
-x2w2.grad=.0706
-b.grad=.0706
-x1w1x2w2.grad=.0706
-n.grad =.0706
-o.grad = 1.0
-'''
-
-1-o.data**2
-
-
-draw_dot(o)
-# %%
-#o =tanh(n)
-#do/dn =1-tanh(n)**2
-#do/dn =1-o**2
-
-# %%
-#b= Value(6.881373587870195432, label='b')
-
-o.grad=1.0
-
-
-o._backward()
-n._backward()
-x1w1x2w2._backward()
-x2w2._backward()
-x1w1._backward()
-draw_dot(o)
-# %%
-o.grad=1.0
-
-# Call ALL nodes in topological order
-topo =[]
-visited = set()
-def build_topo(v):
-    if v not in visited:
-        visited.add(v)
-        for child in v._prev:
-            build_topo(child)
-        topo.append(v)
-build_topo(o)
-
-for node in reversed(topo):
-    node._backward()
-
-draw_dot(o)
-
-# %%
-
-o.backward()
-draw_dot(o)
-
-# %%
-a=Value(3.0, label='a')
-b= a+a ; b.label='b'
-b.backward()
-draw_dot(b)
-# %%
-a=Value(-2.0, label='a')
-b=Value(3.0, label='b')
-d= a*b ; d.label='d'
-e = a+b; e.label='e'
-f=d*e ; f.label='f'
-f.backward()
-draw_dot(f)
-# %%
-a = Value(2.0, label='a')
-b=Value(4.0)
-a*2
-2*a
-a.exp()
-a*(b**-1)
-# %%
-#inputs x1,x2
-x1=Value(2.0, label="x1")
-x2=Value(0.0, label='x2')
-#weights
-w1=Value(-3.0,label='w1')
-w2=Value(1.0, label='w2')
-#bias of neuron?
-b=Value(6.881373587870195432, label='b')
-
-#x1w1 + x2w2 *b
-x1w1=x1*w1; x1w1.label='x1w1'
-x2w2=x2*w2; x2w2.label='x2w2'
-x1w1x2w2=x1w1+x2w2; x1w1x2w2.label='x1w1x2w2'
-n= x1w1x2w2 +b ; n.label='n'
-o=n.tanh(); o.label='o'
-o.backward()
-
-draw_dot(o)
-# %%
 #inputs x1,x2
 x1=Value(2.0, label="x1")
 x2=Value(0.0, label='x2')
@@ -373,6 +159,11 @@ o =  (e-1)/(e+1)
 o.label='o'
 o.backward()
 draw_dot(o)
+# %%
+
+
+
+
 # %%
 import torch
 import random
@@ -399,9 +190,8 @@ torch.Tensor([[1,2,3],[4,5,6]])
 o.item()
 #torch.Size([2,3])
 x2.grad.item()
-#Python uses double float precision therefore .double() is used
-#because tensors default type is float32 and we want float64 for python
-#torch.Tensor([2.0]).double().dtype == torch.float64
+#Python uses double float precision therefore .double() is used because tensors default type is 
+#float32 and we want float64 for python torch.Tensor([2.0]).double().dtype == torch.float64
 
 # %%
 class Neuron:
@@ -468,11 +258,27 @@ xs = [
 ]
 ys = [1.0, -1.0, -1.0, 1.0] #desired targets
 
+for k in range(10):
+    #forward pass
+    ypred =[n(x) for x in xs]
+    loss = sum((yout - ygt)**2 for ygt, yout in zip(ys,ypred))
+
+#all the gradients stack up if we dont 0 them out
+    #backwards pass
+    for p in n.parameters():
+        p.grad = 0.0
+    loss.backward()
+
+    #update
+    for p in n.parameters():
+        p.data += -0.01  * p.grad
+    print(k, loss.data)
+
 ypredict =[n(x) for x in xs]
 ypredict
 
 # for ygroundtruth and youtput in zip of ys in ypredict
-loss = sum((yout - ygt) for ygt, yout in zip(ys, ypredict))
+loss = sum((yout - ygt)**2 for ygt, yout in zip(ys, ypredict))
 #higher loss output means we are further from ground truth (we want 0.0 if possible)
 loss
 # %%
@@ -481,17 +287,17 @@ loss = sum((yout - ygt)**2 for ygt, yout in zip(ys, ypredict))
 
 loss.backward()
 loss
-# %%
-loss.backward()
-# %%
-n.layers[0].neurons[0].w[0].grad
-n.layers[0].neurons[0].w[0].data
+draw_dot(loss)
+'''
+neural nets are multi-layer perceptrons represented as mathematical functions that take input as data, weights and parameters
 
-for p in n.parameters():
-    p.data += -0.01  * p.grad
+there is a mathematical expression for a forward pass followed by a loss function that measures the accuracy of
+the predictions and will have a lower loss when the predictions are closer to the ground truth while aiming for 0.0
+(manipulate loss accordingly to make the neural net act in the right direction)
+we then back propogate for the gradient and tune parameters to reach a more accurate loss output. we do this continuosly in order to achieve the gradient descent
+and minimize the loss as much as possible to be as accurate as possible
 
-#n.parameters()
-#draw_dot(loss)
+'''
 # %%
 ##
 # things got messy so i moved to the clean engine
